@@ -37,30 +37,13 @@ else :
 				echo(get_pos($details['role'])); 
 			}
 			?>
-			</h2><br />
-			 <b>Team:</b> <a href="<?php echo($settings['osp.asset_url']); ?>teams/team_<?php echo($details['team_id']); ?>.html" target="_blank"><?php echo(" ".$details['team_name']." ".$details['teamNickname']); ?></a>
-			| <b>Nickname:</b> <?php echo($details['playerNickname']); ?>
-			<br /> 
-			<b>Height/Weight:</b> <?php echo(cm_to_ft_in($details['height'])); ?>/<?php echo($details['weight']); ?> lbs
-			| <b>Bats/Throws:</b> <?php echo(get_hand($details['bats'])); ?>/<?php echo(get_hand($details['throws'])); ?>
-			<br /><b>Age:</b> <?php echo($details['age']); ?> | <b>Birthdate:</b> <?php echo(date("F j, Y",strtotime($details['date_of_birth']))); ?>
-			| <b>Birthplace: </b> <?php echo($details['birthCity'].", ".$details['birthRegion']." ".$details['birthNation']); ?>
+			</h2>
 			<br />
-			<b> Drafted:</b> <?php 
-			if ($details['draft_team_id'] != 0) {
-				echo ordinal_suffix($details['draft_pick'],1)." pick in the ".ordinal_suffix($details['draft_round'],1)." round of the ";
-				if ($details['draft_year']==0) {echo "inaugural";} else {echo $details['draft_year'];}
-				echo " draft by the ";
-				if (!isset($teams[$details['draft_team_id']]['name'])) {
-					$draftTeam = "Non existent or deleted team";
-				} else {
-					$draftTeam = $teams[$details['draft_team_id']]['name'];
-				}
-				if ($details['draft_year']==0) {echo $teams[$details['draft_team_id']]['name'];} else {echo $draftTeam;}
-			}
-			?>
+				<!-- PLAYER BIO DETAILS -->
+			<?php echo $this->load->view('players/partials/player_bio',array('settings'=>$settings, 'details'=>$details, 'teams'=>$teams),true); ?>
 			<br />
-			<a href="<?php echo($settings['osp.asset_url']); ?>players/player_<?php echo($details['player_id']); ?>.html">OOTP Player Page</a>
+				<!-- PLAYER LINK PARTIAL -->
+			<?php echo $this->load->view('players/partials/player_link',array('settings'=>$settings, 'player_id'=>$details['player_id']),true); ?>
 			
 		</div>
 		<div class="span1">
@@ -68,23 +51,29 @@ else :
 		</div>
 	</div>
 </div>
+	<!-- Show Current Stats -->
+<div class="row-fluid rowbg content">
+	<div class="span12">
+		<?php echo $this->load->view('players/partials/stats_bar',array('statYear'=>$year, 'player_stats'=>$current),true); ?>
+	</div>
+</div>
 	<!-- Show Stats -->
 <div class="row-fluid rowbg content">
-		<div class="span12">
-		<!-- CAREER -->
-		<?php
-		if (isset($career)) :
-			echo($career);
-		endif;
-		?>
-		<!-- EXTENDED -->
-		<?php
-		if (isset($extended)) :
-			echo($extended);
-		endif;
-		?>
-		</div>
-    </div>
+	<div class="span12">
+	<!-- CAREER -->
+	<?php
+	if (isset($career)) :
+		echo($career);
+	endif;
+	?>
+	<!-- EXTENDED -->
+	<?php
+	if (isset($extended)) :
+		echo($extended);
+	endif;
+	?>
+	</div>
+</div>
 	
 <?php 
 endif;

@@ -10,4 +10,4 @@ $lang['player_profile_title']	= 'Player profile';
 $lang['player_profile_not_found']	= "We're sorry. The player you were looking for could not be found.";
 $lang['mod_field_name']			= '';
 
-
+$lang['players_no_players_error'] = '<b>Error</b><br>No players were found in the system. Assure that players have been imported into the fantasy database.';
