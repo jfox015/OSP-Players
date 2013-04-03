@@ -24,37 +24,53 @@ class Players extends Front_Controller {
 	// Full Player List
 	public function index()
 	{
+
         $settings = $this->settings_lib->find_all();
-        $league_id = $this->uri->segment(4);
+        $league_id = $this->uri->segment(3);
         if (!isset($league_id) || empty($league_id) || $league_id == -1) {
 			$league_id = $settings['osp.league_id'];
 		} else {
 			$league_id = 100;
 		}
-		$type = $this->uri->segment(5);
-		$param = $this->uri->segment(6);	
-		
+		$type = $this->uri->segment(4);
+		$param = $this->uri->segment(5);
+
+        if (!isset($type) || empty($type) || $type ==  NULL) {
+            $type = 'alpha';
+        }
+		if (!isset($param) || empty($param) || $param ==  NULL) {
+            $type = 'A';
+        }
+
 		if ($this->players_model->getPlayerCount() > 0) {
 			$players = $this->players_model->get_players($league_id, $type, $param, false);
 			
 			// Pagination
-			$this->load->library('pagination');
+			//$this->load->library('pagination');
 
-			$total_players = sizeof($players);
+			//$total_players = sizeof($players);
 			
-			$this->pager['base_url'] = site_url(SITE_AREA .'/players/index');
+			/*$this->pager['base_url'] = site_url(SITE_AREA .'/players/index');
 			$this->pager['total_rows'] = $total_players;
 			$this->pager['per_page'] = $this->limit;
-			$this->pager['uri_segment']	= 7;
+			$this->pager['uri_segment']	= 7;    */
 
-			$this->pagination->initialize($this->pager);
+			//$this->pagination->initialize($this->pager);
 
 			Template::set('players', $players);
 			Template::set('current_url', current_url());
-		} else {
+			Template::set('league_id', $league_id);
+			Template::set('settings', $settings);
+            Template::set('toolbar_title', "Players List");
+            $this->load->library('open_sports_toolkit/stats');
+            Stats::init($settings['osp.game_sport'],$settings['osp.game_source']);
+            Template::set('positions', Stats::get_position_list());
+        } else {
 			Template::set('toolbar_title', "Players Error");
 			Teamplte::set('message', $this->lang->line('players_no_players_error'));
 		}
+        $this->load->helper('form');
+        Assets::add_module_css('players','style.css');
 		Template::render();
 	}
 	// Player Stats Tool

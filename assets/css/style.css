@@ -1,0 +1,11 @@
+.subOptionsBar ul {
+    list-style: none;
+    margin:0px;
+}
+.subOptionsBar ul li { float:left; padding-right: 8px;}
+
+.searchlabel { display:inline-block; float:left; padding-right: 6px; font-weight:bold; }
+
+#searchTerm { padding-top:3px;display:inline; float:left; padding-right: 6px;  }
+
+.btn { margin-left:5px;}
