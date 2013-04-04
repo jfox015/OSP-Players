@@ -37,6 +37,7 @@
 			<thead>
 			<tr>
                 <th class="headline">Name</th>
+                <th class="headline">Age</th>
                 <th class="headline">Team</th>
                 <th class="headline">Position</th>
             </tr>
@@ -46,9 +47,18 @@
             <?php
             foreach($players as $player) : ?>
             <tr>
-                 <td><?php echo anchor('players/profile/'.$player['player_id'],($player['first_name']." ".$player['last_name'])); ?></td>
-                 <td><?php echo anchor($settings['osp.asset_url'].'teams/team_'.$player['team_id'].'.html',($player['teamname']." ".$player['teamnick'])); ?></td>
-                 <td><?php if ($player['position'] == 1) { $pos = $player['role']; } else { $pos = $player['position']; } echo(get_pos($pos,$positions)); ?></td>
+				<td><?php echo anchor('players/profile/'.$player['player_id'],($player['first_name']." ".$player['last_name'])); 
+				if (isset($player['injury_is_injured']) && !empty($player['injury_is_injured']) && $player['injury_is_injured'] != 0) :
+					$injStatus = make_injury_status_string($player);
+					?>
+					<img src="<?php echo img_path(); ?>red_cross.gif" width="7" height="7" align="absmiddle"
+					alt="<?php echo($injStatus); ?>" title="<?php echo($injStatus); ?>" />&nbsp; 
+					<?php  
+				endif;
+				?></td>
+                <td><?php echo $player['age']; ?></td>
+                <td><?php echo anchor($settings['osp.asset_url'].'teams/team_'.$player['team_id'].'.html',($player['teamname']." ".$player['teamnick'])); ?></td>
+                <td><?php if ($player['position'] == 1) { $pos = $player['role']; } else { $pos = $player['position']; } echo(get_pos($pos,$positions)); ?></td>
             </tr>
             <?php
             endforeach;

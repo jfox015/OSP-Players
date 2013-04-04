@@ -57,6 +57,25 @@ else :
 		<?php echo $this->load->view('players/partials/stats_bar',array('statYear'=>$year, 'player_stats'=>$current),true); ?>
 	</div>
 </div>
+<div class="row-fluid rowbg content">
+    <div class="span12"><br />&nbsp;</div>
+</div>
+	<!-- Misc Info -->
+<div class="row-fluid rowbg content">
+	<div class="span8">
+		<?php 
+		echo $this->load->view('players/partials/player_recent_games',array('details'=>$details, 'recent_games'=>$recent_games),true);
+        echo("<br />");
+		echo $this->load->view('players/partials/player_upcoming_games',array('details'=>$details, 'teams' => $teams, 'settings' =>$settings, 'upcoming_games'=>$upcoming_games),true); ?>
+	</div>
+	<div class="span4">
+		<?php echo $this->load->view('players/partials/player_injury_report',array('details'=>$details),true); ?>
+	</div>
+</div>
+<!-- Misc Info -->
+<div class="row-fluid rowbg content">
+    <div class="span12"><br />&nbsp;</div>
+</div>
 	<!-- Show Stats -->
 <div class="row-fluid rowbg content">
 	<div class="span12">
