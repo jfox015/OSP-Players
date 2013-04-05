@@ -24,6 +24,11 @@ class Players extends Front_Controller {
 	// Full Player List
 	public function index()
 	{
+        redirect('/players/playerlist/');
+    }
+    // Full Player List
+    public function playerlist()
+    {
 
         $settings = $this->settings_lib->find_all();
         $league_id = $this->uri->segment(3);
@@ -71,11 +76,13 @@ class Players extends Front_Controller {
         
 		// FILTER PARAMS
 		$type = $this->uri->segment(4);
-		$team_id = $this->uri->segment(5);
-		$position = $this->uri->segment(6);
-		$range = $this->uri->segment(7); // current, last, last 3 summary
-        $sub_league_id = $this->uri->segment(8); // sub league id
-        $offset = $this->uri->segment(9); // pager offset
+        $league_year = $this->uri->segment(5);
+        $team_id = $this->uri->segment(6);
+		$position = $this->uri->segment(7);
+		$split = $this->uri->segment(8);
+		//$range = $this->uri->segment(7); // current, last, last 3 summary
+        $sub_league_id = $this->uri->segment(9); // sub league id
+        $offset = $this->uri->segment(10); // pager offset
 
 		if (!isset($league_id) || empty($league_id) || $league_id == -1) {
 			$league_id = $settings['osp.league_id'];
@@ -93,16 +100,14 @@ class Players extends Front_Controller {
 			$league_year = (int)$league_year;
             $years =  $this->leagues_model->get_all_seasons($league_id);
 			
-			if($type !== false && $type == 1) {
-				$player_type = TYPE_SPECIALTY;
-			} else {
-				$player_type = TYPE_OFFENSE;
+			if(!isset($type) || $type == null) {
+				$type = TYPE_OFFENSE;
 			}
 			
-			if($team_id !== false) {
+			if($team_id != null) {
 				$id_param = (int) $team_id;
 				$stat_type = ID_TEAM;
-			} else if($sub_league_id !== false) {
+			} else if($sub_league_id != null) {
 				$id_param = (int) $sub_league_id;
 				$stat_type = ID_SUB_LEAGUE;
 			} else {
@@ -110,16 +115,23 @@ class Players extends Front_Controller {
 				$stat_type = ID_LEAGUE;
 			}
 
-            $stat_class = stats_class($player_type, CLASS_COMPLETE, array('NAME','GENERAL'));
-			$records = Stats::get_stats($stat_type,$id_param,$player_type,$stat_class,STATS_SEASON,RANGE_SEASON,array('year'=>$league_year));
-			// RENDER STATS TO VIEW CODE				
-			$players_stats = $this->load->view('open_sports_toolkit/stats_table',array('player_type'=>$player_type,'stats_class'=>$stat_class,'stats_list'=>$stats_list,'records'=>$records), true);
+            if (!isset($split) || $split == null) {
+                $split == SPLIT_SEASON;
+            }
+            if ($type == TYPE_DEFENSE) {
+                $split = SPLIT_DEFENSE;
+            }
+
+            $stat_class = stats_class($type, CLASS_COMPLETE, array('PNABBR','TEAM_ACY','GENERAL'));
+			$records = Stats::get_stats($stat_type,$id_param,$type,$stat_class,STATS_SEASON,RANGE_SEASON,array('year'=>$league_year, 'no_operator'=>true, 'split' => $split));
+			$players_stats = $this->load->view('open_sports_toolkit/stats_table',array('player_type'=>$type,'stats_class'=>$stat_class,'stats_list'=>$stats_list,'records'=>$records), true);
 			
 			Template::set('years',$years);
 			Template::set('players_stats',$players_stats);
 			Template::set('stat_classes',$stat_class);
 			Template::set('stats_list',$stats_list);
 			Template::set('league_year',$league_year);
+			Template::set('league_id',$league_id);
 			Template::set('team_id',$team_id);
 
 			// Pagination
@@ -142,6 +154,7 @@ class Players extends Front_Controller {
             Template::set('teams',$this->teams_model->get_teams_array(($settings['statslist.limit_to_primary'] == 1) ? $settings['osp.league_id'] : false));
             Template::set('years',$years);
             Template::set('settings',$settings);
+            Template::set('type',$type);
         } else {
 			Template::set('toolbar_title', "Player Stats Error");
 			Teamplte::set('message', $this->lang->line('players_no_players_error'));
