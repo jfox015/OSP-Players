@@ -12,7 +12,7 @@
                 <ul>
                     <?php
                     for ($i = 65; $i < 91; $i++) {
-                        echo('<li>'.anchor('players/index/'.$league_id.'/alpha/'.chr($i),chr($i)).'</li>');
+                        echo('<li>'.anchor('players/playerlist/'.$league_id.'/alpha/'.chr($i),chr($i)).'</li>');
                     } ?>
                 </ul>
             </div>
