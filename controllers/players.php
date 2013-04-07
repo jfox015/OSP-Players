@@ -129,16 +129,18 @@ class Players extends Front_Controller {
 			$records = Stats::get_stats($stat_type,$id_param,$type,$stat_class,STATS_SEASON,RANGE_SEASON,array('year'=>$league_year, 'no_operator'=>true, 'split' => $split));
 			$players_stats = $this->load->view('open_sports_toolkit/stats_table',array('player_type'=>$type,'stats_class'=>$stat_class,'stats_list'=>$stats_list,'records'=>$records), true);
 			
-			Template::set('years',$years);
+			//Template::set('years',$years);
 			Template::set('players_stats',$players_stats);
 			Template::set('stat_classes',$stat_class);
 			Template::set('stats_list',$stats_list);
 			Template::set('league_year',$league_year);
 			Template::set('league_id',$league_id);
+			Template::set('player_count',sizeof($records));
 			//Template::set('sub_league_id',$sub_league_id);
 			Template::set('team_id',(isset($team_id) ? $team_id : "-1"));
 			Template::set('position_list',Stats::get_position_array());
-
+			Template::set('split_id',$split);
+			Template::set('splits',Stats::get_splits_array());
 			// Pagination
 			/*$this->load->library('pagination');
 
@@ -158,7 +160,7 @@ class Players extends Front_Controller {
 			$this->load->helper('form');
 			$this->load->helper('url');
 			Template::set('teams',$this->teams_model->get_teams_array($league_id));
-			Template::set('years',$years);
+			//Template::set('years',$years);
 			Template::set('settings',$settings);
 			Template::set('type',$type);
         } else {
