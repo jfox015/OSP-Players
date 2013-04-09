@@ -74,14 +74,16 @@ class Players extends Front_Controller {
 		if ($this->players_model->getPlayerCount() > 0) 
 		{
 			$settings = $this->settings_lib->find_all();
-			if ($this->input->post('type'))
+			$sub_league_id = "all";
+            $position_id = -1;
+            if ($this->input->post('type'))
 			{
 				$type = $this->input->post('type');
 				$league_year = ($this->input->post('year')) ? $this->input->post('year') : -1;
 				$team_id = ($this->input->post('team_id')) ? $this->input->post('team_id') : -1;
 				$position_id = ($this->input->post('position_id')) ? $this->input->post('position_id') : -1;
 				$split = ($this->input->post('split')) ? $this->input->post('split') : -1;
-				$sub_league_id = ($this->input->post('sub_league_id')) ? $this->input->post('sub_league_id') : -1;
+				$sub_league_id = ($this->input->post('sub_league_id')) ? $this->input->post('sub_league_id') : "sub_all";
 				$offset = ($this->input->post('offset')) ? $this->input->post('offset') : -1;
 				$limit = ($this->input->post('limit')) ? $this->input->post('limit') : -1;
 			} 
@@ -107,10 +109,10 @@ class Players extends Front_Controller {
 				$type = TYPE_OFFENSE;
 			}
 			
-			if(isset($team_id) && $team_id != -1) {
+			if(isset($team_id) && !empty($team_id) && $team_id != -1) {
 				$id_param = (int) $team_id;
 				$stat_type = ID_TEAM;
-			} else if(isset($sub_league_id) && $sub_league_id != -1) {
+			} else if(isset($sub_league_id) && !empty($sub_league_id) && $sub_league_id != "all") {
 				$id_param = (int) $sub_league_id;
 				$stat_type = ID_SUB_LEAGUE;
 			} else {
@@ -138,9 +140,13 @@ class Players extends Front_Controller {
 			Template::set('player_count',sizeof($records));
 			//Template::set('sub_league_id',$sub_league_id);
 			Template::set('team_id',(isset($team_id) ? $team_id : "-1"));
+			Template::set('position_id',$position_id);
 			Template::set('position_list',Stats::get_position_array());
-			Template::set('split_id',$split);
-			Template::set('splits',Stats::get_splits_array());
+            Template::set('splits',Stats::get_splits_array());
+            Template::set('hands',Stats::get_hands_array());
+            Template::set('sub_leagues',$this->leagues_model->get_subleague_info($league_id, true));
+            Template::set('split_id',$split);
+			Template::set('sub_league_id',$sub_league_id);
 			// Pagination
 			/*$this->load->library('pagination');
 
@@ -204,15 +210,15 @@ class Players extends Front_Controller {
 			$stats_list = Stats::get_stats_list();
 			
 			$stat_classes = array (
-				'Career'=>stats_class($player_type, CLASS_EXPANDED, array('NAME','POS')),
-				'Extended'=>stats_class($player_type,CLASS_EXTENDED, array('NAME')),
+				'Career'=>stats_class($player_type, CLASS_EXPANDED, array('TNACR')),
+				'Extended'=>stats_class($player_type,CLASS_EXTENDED, array('TNACR')),
 				'Current'=>stats_class($player_type,CLASS_STANDARD),
 				'Recent'=>stats_class($player_type,CLASS_RECENT)
 			);
 			$records = array (
-				'Career'=>Stats::get_stats(ID_PLAYER,$player_id,$player_type,$stat_classes['Career'],STATS_CAREER,RANGE_CAREER, array('year'=>$league_year, 'no_operator'=>true)),
-				'Extended'=>Stats::get_stats(ID_PLAYER,$player_id,$player_type,$stat_classes['Extended'],STATS_CAREER,RANGE_CAREER, array('year'=>$league_year, 'no_operator'=>true)),
-				'Current'=>Stats::get_stats(ID_PLAYER,$player_id,$player_type,$stat_classes['Current'],STATS_SEASON,RANGE_SEASON, array('year'=>$league_year, 'no_operator'=>true)),
+				'Career'=>Stats::get_stats(ID_PLAYER,$player_id,$player_type,$stat_classes['Career'],STATS_CAREER,RANGE_CAREER, array('year'=>$league_year, 'no_operator'=>true, 'split'=>SPLIT_SEASON)),
+				'Extended'=>Stats::get_stats(ID_PLAYER,$player_id,$player_type,$stat_classes['Extended'],STATS_CAREER,RANGE_CAREER, array('year'=>$league_year, 'no_operator'=>true, 'split'=>SPLIT_SEASON)),
+				'Current'=>Stats::get_stats(ID_PLAYER,$player_id,$player_type,$stat_classes['Current'],STATS_SEASON,RANGE_SEASON, array('year'=>$league_year, 'no_operator'=>true, 'split'=>SPLIT_SEASON)),
 				'Recent'=>$this->players_model->get_recent_game_stats($league_id, $league_date, $league_year, $settings['osp.sim_length'], $player_id), 
 			);
 
@@ -239,7 +245,13 @@ class Players extends Front_Controller {
 			Template::set('stats_list',$stats_list);
 			Template::set('player_id',$player_id);
 			Template::set('year',$league_year);
-	
+			Template::set('in_season',$this->leagues_model->in_season());
+            Template::set('position_list',Stats::get_position_list());
+            $award_list = Stats::get_award_list();
+            Template::set('award_list',$award_list);
+            Template::set('hands',Stats::get_hands_list());
+            Template::set('awards',$this->players_model->get_player_awards($league_id, $player_id,$award_list));
+            Assets::add_module_css('players','style.css');
 			Template::set('toolbar_title', $details['first_name']." ".$details['last_name']);
 		}
 		Template::render();

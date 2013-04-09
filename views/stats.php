@@ -19,10 +19,27 @@
                 <button class="btn" rel="type" id="<?php echo TYPE_SPECIALTY; ?>">Pitching</button>
                 <button class="btn" rel="type" id="<?php echo TYPE_DEFENSE; ?>">Fielding</button>
             </div>
+            <br />
+		    <?php
+			if (isset($sub_leagues) && is_array($sub_leagues) && count($sub_leagues) > 0) :
+			echo form_label("League:", "sub_league", array('style'=>'display: inline-block !important;'));
+            ?>
+            <div class="btn-group" data-toggle="buttons-radio" style="display: inline-block !important;">
+                <button class="btn" rel="sub_league" id="all">All</button>
+                <?php 
+				foreach($sub_leagues as $id => $val) : ?>
+				<button class="btn" rel="sub_league" id="<?php echo $val; ?>"><?php echo $val; ?></button>
+				<?php endforeach; ?>
+            </div>
+			<?php
+			endif; 
+			?>
 		</div>
+		
 
 		<div class="span7" style="text-align:right;">
-        <?php
+
+		<?php
 		echo form_open(site_url('/players/stats'), ' id="form_filter" method="post" class="form-horizontal"');
         ?>
         <div id="pos_div" style="display:inline;">
@@ -30,7 +47,7 @@
         if (isset($position_list[$type]) && sizeof($position_list[$type]) > 0) :
             echo form_label("Position:", "position_id", array('style'=>'display: inline-block !important;'));
             echo '<select id="position_id" name="position_id" style="width:auto;">'."\n";
-            echo '<option value="">Allr</option>';
+            echo '<option value="">All</option>';
             foreach($position_list[$type] as $id => $val) :
                 echo "\t".'<option value="'.$id.'"';
                 if (isset($position) && $position == $id) { echo " selected"; }
@@ -64,7 +81,8 @@
             endforeach;
 			echo '</select>'."\n";
         endif;
-		if (isset($teams) && sizeof($teams) > 0) :
+
+            if (isset($teams) && sizeof($teams) > 0) :
 			echo form_label("Select Team:", "team_id", array('style'=>'display: inline-block !important;'));
 			echo '<select id="team_id" name="team_id" style="width:auto;">'."\n";
             echo '<option value="">Select Team</option>';
@@ -78,6 +96,7 @@
 		endif;
         ?>
         <input type="hidden" name="type" id ="type" value="<?php echo($type); ?>" />
+        <input type="hidden" name="sub_league_id" id ="sub_league_id" value="<?php echo($sub_league_id); ?>" />
         <button class="btn btn-primary" href="#" id="btn_filter">Go</button>
         <?php
             echo form_close()."\n";
@@ -126,6 +145,7 @@ $inline = <<<EOL
 
     {$array_js}
     $('#{$type}').addClass('active');
+    $('#{$sub_league_id}').addClass('active');
 
 	$('button[rel="type"]').click(function() {
         type = this.id;

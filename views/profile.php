@@ -15,38 +15,17 @@ else :
 	<!-- Begin profile Display -->
 <div class="container-fluid">
 	<div class="row-fluid rowbg content">
-		<div class="span1">
-            <?php
-            if (file_exists($settings['osp.players_img_path'].'player_'.$details['player_id'].'.png')) {
-                $player_img = $settings['osp.players_img_url'].'player_'.$details['player_id'].'.png';
-            }
-            else
-            {
-                $player_img = $settings['osp.asset_url'].'images/default_player_photo.png';
-            }
-            echo "<img src='".$settings['osp.players_img_url']."default_player_photo.jpg'>"
-            ?>
+		<div class="span2">
+           <?php echo $this->load->view('players/partials/player_img',array('settings'=>$settings, 'details'=>$details),true); ?> 
 		</div>
-		<div class="span10">
-			<h2>
-			<?php 
-			echo($details['first_name']." ".$details['last_name']." ");  
-			if ($details['position'] != 1) {
-				echo(get_pos($details['position'])); 
-			} else { 
-				echo(get_pos($details['role'])); 
-			}
-			?>
-			</h2>
-			<br />
+		<div class="span8">
 				<!-- PLAYER BIO DETAILS -->
-			<?php echo $this->load->view('players/partials/player_bio',array('settings'=>$settings, 'details'=>$details, 'teams'=>$teams),true); ?>
+			<?php echo $this->load->view('players/partials/player_bio_full',array('settings'=>$settings, 'details'=>$details, 'teams'=>$teams, 'positions' => $position_list),true); ?>
 			<br />
 				<!-- PLAYER LINK PARTIAL -->
 			<?php echo $this->load->view('players/partials/player_link',array('settings'=>$settings, 'player_id'=>$details['player_id']),true); ?>
-			
 		</div>
-		<div class="span1">
+		<div class="span2">
 			<a href="<?php echo($settings['osp.asset_url']); ?>teams/team_<?php echo($details['team_id']); ?>.html" target="_blank"><img src="<?php echo($settings['osp.team_logo_url'].$teams[$details['team_id']]['logo_file']); ?>" /></a>
 		</div>
 	</div>
@@ -64,12 +43,17 @@ else :
 <div class="row-fluid rowbg content">
 	<div class="span8">
 		<?php 
+		if (isset($in_season) && $in_season === true) :
 		echo $this->load->view('players/partials/player_recent_games',array('details'=>$details, 'recent_games'=>$recent_games),true);
         echo("<br />");
-		echo $this->load->view('players/partials/player_upcoming_games',array('details'=>$details, 'teams' => $teams, 'settings' =>$settings, 'upcoming_games'=>$upcoming_games),true); ?>
+		echo $this->load->view('players/partials/player_upcoming_games',array('details'=>$details, 'teams' => $teams, 'settings' =>$settings, 'awards'=>$upcoming_games),true); 
+		endif;
+		?>
 	</div>
 	<div class="span4">
-		<?php echo $this->load->view('players/partials/player_injury_report',array('details'=>$details),true); ?>
+		<?php echo $this->load->view('players/partials/player_injury_report',array('details'=>$details),true); 
+		echo("<br />");
+		echo $this->load->view('players/partials/player_facts',array('details'=>$details, 'teams' => $teams, 'awards'=>$awards),true); ?>
 	</div>
 </div>
 <!-- Misc Info -->

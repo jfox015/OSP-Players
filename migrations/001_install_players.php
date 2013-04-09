@@ -18,8 +18,11 @@ class Migration_Install_players extends Migration {
             // give current role (or administrators if fresh install) full right to manage permissions
             $this->db->query("INSERT INTO {$prefix}role_permissions VALUES(1,".$this->db->insert_id().")");
         }
-		
-	}
+
+        $this->db->query("UPDATE {$prefix}sql_tables SET required = 1 WHERE name = 'players_awards' OR name = 'cities' OR name = 'nations'");
+
+
+    }
 	
 	//--------------------------------------------------------------------
 	
@@ -37,8 +40,11 @@ class Migration_Install_players extends Migration {
             }
             //delete the role
             $this->db->query("DELETE FROM {$prefix}permissions WHERE (name = '".$name."')");
+
         }
-	}
+        $this->db->query("UPDATE {$prefix}sql_tables SET required = 0 WHERE name = 'players_awards' OR name = 'cities' OR name = 'nations'");
+
+    }
 	
 	//--------------------------------------------------------------------
 	

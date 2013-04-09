@@ -7,6 +7,7 @@ $lang['md_settings_error']		= 'There was an error saving your settings.';
 $lang['mod_unauthorized']		= 'Unauthorized. Sorry you do not have the appropriate permission to this area.';
 
 $lang['player_title_stats'] 	= 'Player Stats';
+$lang['player_facts']			= 'Quick Facts';
 $lang['player_profile_title']	= 'Player profile';
 $lang['player_profile_not_found']	= "We're sorry. The player you were looking for could not be found.";
 $lang['mod_field_name']			= '';

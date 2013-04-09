@@ -1,4 +1,4 @@
-.subOptionsBar ul {
+.subOptionsBar ul, .player-facts ul  {
     list-style: none;
     margin:0px;
 }
@@ -9,3 +9,27 @@
 #searchTerm { padding-top:3px;display:inline; float:left; padding-right: 6px;  }
 
 .btn { margin-left:5px;}
+
+.player-bio .line-divider {
+	width: 100%;
+	-webkit-box-shadow: 0 1px 11px #fff;
+	-moz-box-shadow: 0 1px 11px #fff;
+	border-top: 1px solid #fff;
+	opacity: .3;
+	filter: alpha(opacity=30);
+	float: none;
+	display: block;
+	height: 1px;
+	margin: 0;
+	padding: 0;
+}
+.player-facts li.award{background:url("/awards-sprite.png") no-repeat scroll 0 0 transparent; min-height: 72px;}
+.player-facts li.trophy-boy{background-position:0 0}
+.player-facts li.trophy-poy{background-position:0 -72px}
+.player-facts li.trophy-roy{background-position:0 -144px}
+.player-facts li.trophy-gg{background-position:0 -216px}
+.player-facts li.trophy-as{background-position:0 -432px}
+
+.player-facts ul li.qf-award dl { margin: 0 0 0 75px; color: #2e2e2e; padding: 8px 6px; font-size: 11px; }
+.player-facts ul li.qf-award dl dt.title { font-weight: bold; line-height: 14px; }
+
