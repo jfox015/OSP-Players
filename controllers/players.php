@@ -32,23 +32,29 @@ class Players extends Front_Controller {
 
         $settings = $this->settings_lib->find_all();
         $league_id = $this->uri->segment(3);
-        if (!isset($league_id) || empty($league_id) || $league_id == -1) {
+        if (!isset($league_id) || empty($league_id) || $league_id == -1) 
+		{
 			$league_id = $settings['osp.league_id'];
-		} else {
+		}
+		else
+		{
 			$league_id = 100;
 		}
 		$type = $this->uri->segment(4);
 		$param = $this->uri->segment(5);
 
         // IF NO PARAMS PASSED, LIMIT PLAYER SEARCH TO FIRST LETTER
-		if (!isset($type) || empty($type) || $type == NULL) {
+		if (!isset($type) || empty($type) || $type == NULL) 
+		{
             $type = 'alpha';
         }
-		if (!isset($param) || empty($param) || $param == NULL) {
+		if (!isset($param) || empty($param) || $param == NULL) 
+		{
             $param = 'A';
         }
 
-		if ($this->players_model->getPlayerCount() > 0) {
+		if ($this->players_model->getPlayerCount() > 0)
+		{
 			$players = $this->players_model->get_players($league_id, $type, $param, false);
 			
 			Template::set('players', $players);
@@ -60,7 +66,9 @@ class Players extends Front_Controller {
 			$this->load->library('open_sports_toolkit/stats');
             Stats::init($settings['osp.game_sport'],$settings['osp.game_source']);
             Template::set('positions', Stats::get_position_list());
-        } else {
+        }
+		else 
+		{
 			Template::set('toolbar_title', "Players Error");
 			Teamplte::set('message', $this->lang->line('players_no_players_error'));
 		}
@@ -255,6 +263,63 @@ class Players extends Front_Controller {
 			Template::set('toolbar_title', $details['first_name']." ".$details['last_name']);
 		}
 		Template::render();
+	}
+	
+	public function profile_ajax()
+	{
+		$settings = $this->settings_lib->find_all();
+        
+		$player = null;
+		// Choose Player Type
+		$player_id = -1;
+		$player_id = $this->uri->segment(3);
+		$league_id = $this->uri->segment(4);
+		if (!isset($league_id) || empty($league_id) || $league_id == -1) 
+		{
+			$league_id = $settings['osp.league_id'];
+		}
+		$player_data = array();
+		
+		if (isset($player_id) && !empty($player_id) && $player_id !== NULL) 
+		{
+			$player_id = (int)$player_id;
+
+            $league_year = $this->leagues_model->resolve_stats_season($league_id);
+            $details = $this->players_model->get_player_details($player_id, $settings);
+
+            // Player Stats
+            Stats::init($settings['osp.game_sport'],$settings['osp.game_source']);
+            $stats_list = Stats::get_stats_list();
+            $player_data['player_name'] = $details['first_name']." ".$details['last_name'];
+			
+			if ($details['position'] == 1)
+			{ 
+				$pos = $details['role'];
+				$player_type = TYPE_SPECIALTY;
+			} 
+			else 
+			{ 
+				$pos = $details['position'];
+				$player_type = TYPE_OFFENSE;				
+			} 
+			$player_data['position'] = get_pos($pos,Stats::get_position_list());
+			$player_data['number'] = $details['uniform_num'];
+			
+			$player_data['team_link'] = $settings['osp.asset_url'].'teams/team_'.$details['team_id'].'.html';
+			$player_data['team_name'] = $details['team_name']." ".$details['teamNickname'];
+			
+			$player_data['player_link'] = site_url().'players/profile/'.$player_id;
+            $player_data['stats'] = array();
+			
+			$class = stats_class($player_type, CLASS_COMPACT,array("YEAR"));
+
+            $player_data['stats']['current'] = Stats::get_stats(ID_PLAYER,$player_id,$player_type,$class,STATS_SEASON,RANGE_SEASON, array('year'=>$league_year, 'no_operator'=>true, 'split'=>SPLIT_SEASON,'totals'=>1));
+			//$player_data['stats']['total'] = Stats::get_stats(ID_PLAYER,$player_id,$player_type,$class,STATS_SEASON,RANGE_SEASON, array('year'=>$league_year, 'no_operator'=>true, 'split'=>SPLIT_SEASON));
+			
+		}
+		
+		$this->output->set_header('Content-type: application/json');
+		$this->output->set_output(json_encode($player_data));
 	}
 }
 

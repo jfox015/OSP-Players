@@ -23,7 +23,7 @@
 	margin: 0;
 	padding: 0;
 }
-.player-facts li.award{background:url("/awards-sprite.png") no-repeat scroll 0 0 transparent; min-height: 72px;}
+.player-facts li.award{background:url("../images/awards-sprite.png") no-repeat scroll 0 0 transparent; min-height: 72px;}
 .player-facts li.trophy-boy{background-position:0 0}
 .player-facts li.trophy-poy{background-position:0 -72px}
 .player-facts li.trophy-roy{background-position:0 -144px}

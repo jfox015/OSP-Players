@@ -41,7 +41,7 @@
 									case 'BOY': 
 									case 'ROY': 
 									case 'GG': 
-									case 'AS': echo '<li class="award trophy-'.strtolower($awrdType).'"><dl><dt class="title">'.lang('full_'.$awrdType).' '.($awCnt).'</dt><dd>'.$val.'</dd></dl></li>'; break;
+									case 'AS': echo '<li class="award trophy-'.strtolower($awrdType).'"><dl><dt class="title">'.lang('full_'.$awrdType).' ('.$awCnt.')</dt><dd>'.$val.'</dd></dl></li>'; break;
 									default:
                                         break;
 								endswitch; // END switch
