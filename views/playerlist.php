@@ -1,3 +1,5 @@
+<?php if(isset($popup_template)) { echo($popup_template); } ?>
+
 <!-- Begin profile Display -->
 <div class="container-fluid">
     <div class="row-fluid rowbg content">
@@ -47,7 +49,7 @@
             <?php
             foreach($players as $player) : ?>
             <tr>
-				<td><?php echo anchor('players/profile/'.$player['player_id'],($player['first_name']." ".$player['last_name'])); 
+				<td><?php echo get_player_link($player['player_id']);
 				if (isset($player['injury_is_injured']) && !empty($player['injury_is_injured']) && $player['injury_is_injured'] != 0) :
 					$injStatus = make_injury_status_string($player);
 					?>

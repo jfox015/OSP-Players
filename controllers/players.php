@@ -12,6 +12,7 @@ class Players extends Front_Controller {
 		$this->load->model('open_sports_toolkit/teams_model');
 		
 		$this->load->helper('open_sports_toolkit/general');
+		$this->load->helper('players/players');
         
 		$this->load->library('open_sports_toolkit/stats');
             
@@ -55,6 +56,7 @@ class Players extends Front_Controller {
 
 		if ($this->players_model->getPlayerCount() > 0)
 		{
+			$this->player_link_init();
 			$players = $this->players_model->get_players($league_id, $type, $param, false);
 			
 			Template::set('players', $players);
@@ -169,7 +171,7 @@ class Players extends Front_Controller {
 			$this->pagination->initialize($this->pager);
 
 			Template::set('current_url', current_url()); */
-			
+			$this->player_link_init();
 			$settings = get_asset_path($settings);
 			$this->load->helper('form');
 			$this->load->helper('url');
@@ -309,17 +311,26 @@ class Players extends Front_Controller {
 			$player_data['team_name'] = $details['team_name']." ".$details['teamNickname'];
 			
 			$player_data['player_link'] = site_url().'players/profile/'.$player_id;
-            $player_data['stats'] = array();
-			
-			$class = stats_class($player_type, CLASS_COMPACT,array("YEAR"));
 
-            $player_data['stats']['current'] = Stats::get_stats(ID_PLAYER,$player_id,$player_type,$class,STATS_SEASON,RANGE_SEASON, array('year'=>$league_year, 'no_operator'=>true, 'split'=>SPLIT_SEASON,'totals'=>1));
-			//$player_data['stats']['total'] = Stats::get_stats(ID_PLAYER,$player_id,$player_type,$class,STATS_SEASON,RANGE_SEASON, array('year'=>$league_year, 'no_operator'=>true, 'split'=>SPLIT_SEASON));
-			
+            $player_data['stats'] = Stats::get_stats(ID_PLAYER,$player_id,$player_type,stats_class($player_type, CLASS_COMPACT,array("YEAR")),STATS_SEASON,RANGE_SEASON, array('year'=>$league_year, 'no_operator'=>true, 'split'=>SPLIT_SEASON,'totals'=>1));
 		}
 		
 		$this->output->set_header('Content-type: application/json');
 		$this->output->set_output(json_encode($player_data));
+	}
+	
+	public function player_link_init() 
+	{
+		$settings = $this->settings_lib->find_all();
+        
+		if (isset($settings['players.player_link_type']) && $settings['players.player_link_type'] == 'popup') {
+			Template::set('popup_template',$this->load->view('players/profile_ajax',false,true));
+			//Assets::clear_cache();
+			//Assets::set_globals(false);
+            Assets::add_js(base_url().'/assets/js/underscore-min.js','external');
+            Assets::add_js($this->load->view('players/players_popup_js',false, true),'inline');
+
+		}
 	}
 }
 

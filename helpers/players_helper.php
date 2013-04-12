@@ -13,7 +13,7 @@
 
 if ( ! function_exists('get_player_link')) 
 {
-	function get_player_link($player_id = false, $settings = false, $use_popup = false, $teams = false) 
+	function get_player_link($player_id = false, $player_name = false) 
 	{
 		if ($player_id === false) 
 		{
@@ -21,24 +21,21 @@ if ( ! function_exists('get_player_link'))
 		}
 		$link = "";
 		$ci =& get_instance();
-		$ci->load->model('open_sports_toolkit/players_model');
-		$player_name = $ci->players_model->get_player_name($player_id);
-		if ($use_popup === false)
+		$settings = $ci->settings_lib->find_all_by('module','players');
+		if ($player_name === false) 
+		{
+			$ci->load->model('open_sports_toolkit/players_model');
+			$player_name = $ci->players_model->get_player_name($player_id);
+		}
+		if (isset($settings['players.player_link_type']) && $settings['players.player_link_type'] != 'popup')
 		{
 			$link = anchor('players/profile/'.$player_id, $player_name);
 		}
 		else 
 		{
 			$link = anchor('#', $player_name, array('id'=>$player_id, 'rel'=>'player_popup'));
-			Template::set('popup_template',$ci->load->view('players/profile_ajax',false,true));
-			Assets::clear_cache();
-			Assets::set_globals(false);
-            Assets::add_module_css('players','players_popup.css');
-			Assets::add_module_js('players','players_popup.js');
-			Assets::add_js('assets/js/underscore-min.js');
 		}
 		return $link;
 	}
-} 
-
+}
 ?>

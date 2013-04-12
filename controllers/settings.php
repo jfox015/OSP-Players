@@ -14,7 +14,7 @@ class Settings extends Admin_Controller {
         {
             $this->load->model('activities/Activity_model', 'activity_model', true);
         }
-
+		$this->lang->load('players');
 	}
 	
 	//--------------------------------------------------------------------
@@ -35,7 +35,7 @@ class Settings extends Admin_Controller {
             if ($this->save_settings())
             {
                 Template::set_message(lang('md_settings_saved'), 'success');
-                redirect(SITE_AREA .'/settings/[module]');
+                redirect(SITE_AREA .'/settings/players');
             } else
             {
                 Template::set_message(lang('md_settings_error'), 'error');
@@ -45,8 +45,8 @@ class Settings extends Admin_Controller {
         $settings = $this->settings_lib->find_all();
         Template::set('settings', $settings);
 
-        Template::set('toolbar_title', lang('mod_settings_title'));
-        Template::set_view('[module]/settings/index');
+        Template::set('toolbar_title', lang('players_settings_title'));
+        Template::set_view('players/settings/index');
         Template::render();
     }
 
@@ -61,7 +61,7 @@ class Settings extends Admin_Controller {
 
 		$this->load->library('form_validation');
 
-        $this->form_validation->set_rules('field_name', lang('mod_field_name'), 'trim|xss_clean');
+        $this->form_validation->set_rules('player_link_type', lang('player_link_type'), 'trim|xss_clean');
         
         if ($this->form_validation->run() === false)
         {
@@ -69,7 +69,7 @@ class Settings extends Admin_Controller {
         }
 
 		$data = array(
-            array('name' => '[prefix].field_name', 'value' => $this->input->post('field_name')),
+            array('name' => 'players.player_link_type', 'value' => $this->input->post('player_link_type')),
 
         );
         //destroy the saved update message in case they changed update preferences.

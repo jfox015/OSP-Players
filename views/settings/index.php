@@ -6,18 +6,29 @@
 
 <div class="admin-box">
 
-    <h3>[Module] Settings</h3>
+    <h3>Players Settings</h3>
 
     <?php echo form_open($this->uri->uri_string(), 'class="form-horizontal"'); ?>
 
     <fieldset>
-        <legend><?php echo lang('mod_settings_title'); ?></legend>
+        <legend><?php echo lang('players_settings_title'); ?></legend>
 	
-		<div class="control-group <?php echo form_error('[field_name]') ? 'error' : '' ?>">
-			<label class="control-label" for="[field_name]"><?php echo lang('mod_field_name'); ?></label>
+		<div class="control-group <?php echo form_error('player_link_type') ? 'error' : '' ?>">
+			<label class="control-label" for="player_link_type"><?php echo lang('player_link_type'); ?></label>
 			<div class="controls">
-				 <input name="[field_name]" id="[field_name]" />
-				<?php if (form_error('[field_name]')) echo '<span class="help-inline">'. form_error('[field_name]') .'</span>'; ?>
+				<select id="player_link_type" name="player_link_type" class="span3">
+				<?php
+					$linktypes = array(0 =>'Pop-up Card',1 =>'Link to profile');
+					foreach( $linktypes as $id => $label) :
+						echo('<option value="'.$id.'"');
+						if (isset($settings['players.player_link_type']) && $settings['players.player_link_type'] == $id) {
+							echo(' selected="selected"');
+						}
+						echo('">'.$label.'</option>');
+					endforeach;
+				?>
+				</select>
+				<?php if (form_error('player_link_type')) echo '<span class="help-inline">'. form_error('player_link_type') .'</span>'; ?>
 			</div>
 		</div>
 	
@@ -29,13 +40,4 @@
 	
 	<?php echo form_close(); ?>
 </div>
-
-<script type="text/javascript">
-    head.ready(function(){
-        $(document).ready(function() {
-
-        });
-    });
-
-</script>
 
