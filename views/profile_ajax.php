@@ -1,6 +1,6 @@
 <?php
 $inline = <<<EOL
-<div id="player_modal" class="modal hide" style="display:none;">
+<div id="player_modal" class="modal">
 	<div class="modal-body" id="player_content">
 	</div>
 </div>

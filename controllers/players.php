@@ -220,9 +220,9 @@ class Players extends Front_Controller {
 			$stats_list = Stats::get_stats_list();
 			
 			$stat_classes = array (
-				'Career'=>stats_class($player_type, CLASS_EXPANDED, array('TNACR')),
-				'Extended'=>stats_class($player_type,CLASS_EXTENDED, array('TNACR')),
-				'Current'=>stats_class($player_type,CLASS_STANDARD),
+				'Career'=>stats_class($player_type, CLASS_EXPANDED, array('YEAR','TNACR')),
+				'Extended'=>stats_class($player_type,CLASS_EXTENDED, array('YEAR','TNACR')),
+				'Current'=>stats_class($player_type,CLASS_COMPACT),
 				'Recent'=>stats_class($player_type,CLASS_RECENT)
 			);
 			$records = array (

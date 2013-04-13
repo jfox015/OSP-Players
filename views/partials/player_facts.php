@@ -3,10 +3,11 @@
 				<div class="row-fluid rowbg content">
 					<div class="span12 player-facts">
 						<ul>
+							<?php 
+							if ($details['draft_team_id'] != 0) { ?>
 							<li>
 							<b><?php echo lang('player_drafted'); ?>:</b> 
-							<?php 
-							if ($details['draft_team_id'] != 0) {
+							<?php
 								echo ordinal_suffix($details['draft_pick'],1)." ".lang('player_pick_in')." ".ordinal_suffix($details['draft_round'],1)." ".lang('player_round_of')." ";
 								if ($details['draft_year']==0) { echo lang('player_inaugural'); } else { echo $details['draft_year']; }
 								echo " ".lang('player_draft_by')." ";
@@ -16,10 +17,10 @@
 									$draftTeam = $teams[$details['draft_team_id']]['name']." ".$teams[$details['draft_team_id']]['nickname'];
 								}
 								if ($details['draft_year']==0) {echo $teams[$details['draft_team_id']]['name'];} else {echo $draftTeam;}
-							}
 							?>
 							</li>
-						<?php
+							<?php
+							}
 						
 						// TODO: SALARY
 						
@@ -35,13 +36,15 @@
                                 //echo($awid ." = ".$val."<br />");
 								$awCnt=explode(",",$val);
 								$awCnt=count($awCnt);
-								$awrdType = get_award($awid,$award_list);
+								//$awrdType = get_award($awid,$award_list);
+                               // echo $awid."<br />";
+                                //echo $awrdType."<br />";
 								switch ($awid) :
 									case 'POY': 
 									case 'BOY': 
 									case 'ROY': 
 									case 'GG': 
-									case 'AS': echo '<li class="award trophy-'.strtolower($awrdType).'"><dl><dt class="title">'.lang('full_'.$awrdType).' ('.$awCnt.')</dt><dd>'.$val.'</dd></dl></li>'; break;
+									case 'AS': echo '<li class="award trophy-'.strtolower($awid).'"><dl><dt class="title">'.lang('full_'.$awid).' ('.$awCnt.')</dt><dd>'.$val.'</dd></dl></li>'; break;
 									default:
                                         break;
 								endswitch; // END switch

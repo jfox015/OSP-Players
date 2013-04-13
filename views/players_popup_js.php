@@ -18,3 +18,4 @@ $('#player_modal').modal({
 	static:true,
 	background: true
 });
+$('#player_modal').modal('hide');

@@ -30,32 +30,36 @@ else :
 		</div>
 	</div>
 </div>
-	<!-- Show Current Stats -->
-<div class="row-fluid rowbg content">
-	<div class="span12">
-		<?php echo $this->load->view('players/partials/stats_bar',array('statYear'=>$year, 'player_stats'=>$current),true); ?>
-	</div>
-</div>
 <div class="row-fluid rowbg content">
     <div class="span12"><br />&nbsp;</div>
 </div>
+<?php
+if (isset($in_season) && $in_season === true) :  ?>
 	<!-- Misc Info -->
 <div class="row-fluid rowbg content">
-	<div class="span8">
-		<?php 
-		if (isset($in_season) && $in_season === true) :
+	<div class="span6">
+		<?php
 		echo $this->load->view('players/partials/player_recent_games',array('details'=>$details, 'recent_games'=>$recent_games),true);
-        echo("<br />");
-		echo $this->load->view('players/partials/player_upcoming_games',array('details'=>$details, 'teams' => $teams, 'settings' =>$settings, 'awards'=>$upcoming_games),true); 
-		endif;
+        ?>
+    </div>
+    <div class="span6">
+		<?php
+        echo $this->load->view('players/partials/player_upcoming_games',array('details'=>$details, 'teams' => $teams, 'settings' =>$settings, 'awards'=>$upcoming_games),true);
 		?>
 	</div>
-	<div class="span4">
+</div>
+<?php endif; ?>
+<div class="row-fluid rowbg content">
+    <div class="span8">
+        <?php echo $this->load->view('players/partials/stats_bar',array('statYear'=>$year, 'player_stats'=>$current),true); ?>
+    </div>
+    <div class="span4">
 		<?php echo $this->load->view('players/partials/player_injury_report',array('details'=>$details),true); 
 		echo("<br />");
 		echo $this->load->view('players/partials/player_facts',array('details'=>$details, 'teams' => $teams, 'awards'=>$awards),true); ?>
 	</div>
 </div>
+
 <!-- Misc Info -->
 <div class="row-fluid rowbg content">
     <div class="span12"><br />&nbsp;</div>
@@ -77,7 +81,7 @@ else :
 	?>
 	</div>
 </div>
-	
+
 <?php 
 endif;
 ?>
