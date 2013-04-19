@@ -14,6 +14,7 @@ $lang['mod_field_name']			= '';
 
 $lang['players_no_players_error']   = '<b>Error</b><br>No players were found in the system. Assure that players have been imported into the fantasy database.';
 $lang['players_no_players']         = 'No players results were returned.';
+$lang['players_params_error']       = 'No player search parameters were received.';
 
 // PLAYER BIO LABELS AND STRINGS
 $lang['player_team']			= 'Team';
@@ -24,7 +25,7 @@ $lang['player_kilos']			= 'kg';
 $lang['player_bats_throws']		= 'Bats/Throws';
 $lang['player_age']				= 'Age';
 $lang['player_birthplace']		= 'Birthplace';
-$lang['player_birthday']		= 'Birthdate';
+$lang['player_birthday']		= 'Birthday';
 $lang['player_drafted']			= 'Drafted';
 $lang['player_team_nonexistent']= 'Non existent or deleted team';
 $lang['player_draft_by']		= 'draft by the';
