@@ -36,6 +36,9 @@ $lang['player_inaugural']		= 'inaugural';
 //BUTTONS
 $lang['button_action_search'] = 'Search';
 
+// SETTINGS
+$lang['player_link_type']		= 'Link Display Type';
+
 //PARTIALS
 $lang['player_no_games_found'] = 'No games were found.';
 $lang['player_upcoming_schedule'] = 'Upcoming Schedule';

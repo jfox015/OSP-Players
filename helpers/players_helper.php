@@ -27,7 +27,7 @@ if ( ! function_exists('get_player_link'))
 			$ci->load->model('open_sports_toolkit/players_model');
 			$player_name = $ci->players_model->get_player_name($player_id);
 		}
-		if (isset($settings['players.player_link_type']) && $settings['players.player_link_type'] != 'popup')
+		if (isset($settings['players.player_link_type']) && $settings['players.player_link_type'] == 2)
 		{
 			$link = anchor('players/profile/'.$player_id, $player_name);
 		}

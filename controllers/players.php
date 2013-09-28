@@ -32,69 +32,42 @@ class Players extends Front_Controller {
     {
 
         $settings = $this->settings_lib->find_all();
-        $type = '';
-        $param = '';
-
-        if ($this->input->post('submit'))
-        {
-            $searchTerm = $this->input->post('searchTerm');
-            if (isset($searchTerm) && !empty($searchTerm))
-            {
-                $type = "name";
-                $param = $searchTerm;
-            }
-            else
-            {
-               Template::set_message('A search term was not provided.', 'error');
-            }
-        }
-        else
-        {
-            $league_id = $this->uri->segment(3);
-
-            $type = $this->uri->segment(4);
-            $param = $this->uri->segment(5);
-
-            // IF NO PARAMS PASSED, LIMIT PLAYER SEARCH TO FIRST LETTER
-            if (!isset($type) || empty($type) || $type == NULL)
-            {
-                $type = 'alpha';
-            }
-            if (!isset($param) || empty($param) || $param == NULL)
-            {
-                $param = 'A';
-            }
-        }
-        if (!isset($league_id) || empty($league_id) || $league_id == -1)
-        {
-            $league_id = $settings['osp.league_id'];
-        }
-        else
-        {
-            $league_id = 100;
-        }
-        if ($this->players_model->getPlayerCount() > 0)
+        $league_id = $this->uri->segment(3);
+        if (!isset($league_id) || empty($league_id) || $league_id == -1) 
 		{
-			if (!empty($type) && !empty($param))
-            {
-                $this->player_link_init();
-                $players = $this->players_model->get_players($league_id, $type, $param, false);
+			$league_id = $settings['osp.league_id'];
+		}
+		else
+		{
+			$league_id = 100;
+		}
+		$type = $this->uri->segment(4);
+		$param = $this->uri->segment(5);
 
-                Template::set('players', $players);
-                Template::set('current_url', current_url());
-                Template::set('league_id', $league_id);
-                Template::set('settings', $settings);
-                Template::set('toolbar_title', "Players List");
-                // Include stats lib for position resolution
-                $this->load->library('open_sports_toolkit/stats');
-                Stats::init($settings['osp.game_sport'],$settings['osp.game_source']);
-                Template::set('positions', Stats::get_position_list());
-            }
-            else
-            {
-                Template::set('toolbar_title', "Players Search Error");
-                Teamplte::set('message', $this->lang->line('players_params_error'));
-            }
+        // IF NO PARAMS PASSED, LIMIT PLAYER SEARCH TO FIRST LETTER
+		if (!isset($type) || empty($type) || $type == NULL) 
+		{
+            $type = 'alpha';
+        }
+		if (!isset($param) || empty($param) || $param == NULL) 
+		{
+            $param = 'A';
+        }
+
+		if ($this->players_model->getPlayerCount() > 0)
+		{
+			$this->player_link_init();
+			$players = $this->players_model->get_players($league_id, $type, $param, false);
+			
+			Template::set('players', $players);
+			Template::set('current_url', current_url());
+			Template::set('league_id', $league_id);
+			Template::set('settings', $settings);
+            Template::set('toolbar_title', "Players List");
+            // Include stats lib for position resolution
+			$this->load->library('open_sports_toolkit/stats');
+            Stats::init($settings['osp.game_sport'],$settings['osp.game_source']);
+            Template::set('positions', Stats::get_position_list());
         }
 		else 
 		{

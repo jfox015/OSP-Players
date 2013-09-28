@@ -18,7 +18,7 @@
 			<div class="controls">
 				<select id="player_link_type" name="player_link_type" class="span3">
 				<?php
-					$linktypes = array(0 =>'Pop-up Card',1 =>'Link to profile');
+					$linktypes = array(1 =>'Pop-up Card',2 =>'Link to profile');
 					foreach( $linktypes as $id => $label) :
 						echo('<option value="'.$id.'"');
 						if (isset($settings['players.player_link_type']) && $settings['players.player_link_type'] == $id) {
