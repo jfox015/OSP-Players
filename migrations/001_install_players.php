@@ -24,7 +24,26 @@ class Migration_Install_players extends Migration {
 			 ('players.player_link_type', 'players', 'popup');
 		";
         $this->db->query($default_settings);
-        $this->db->query("UPDATE {$prefix}sql_tables SET required = 1 WHERE name = 'players_awards' OR name = 'cities' OR name = 'nations'");
+        $this->db->query("UPDATE {$prefix}sql_tables SET required = 1 WHERE name = 'players_awards' OR name = 'cities' OR name = 'nations' OR name = 'states'");
+		
+		if ($this->db->table_exists('navigation')) 
+		{
+			$query = $this->db->query("SELECT nav_group_id FROM {$prefix}navigation_group where title = 'header_nav'");
+			if ($query->num_rows() > 0) 
+			{
+				$row = $query->row();
+				$nav_group_id = $row->nav_group_id;
+				$data = array('nav_id'=>0,
+					  'title'=>'Players',
+					  'url'=>'/players',
+					  'nav_group_id'=>$nav_group_id,
+					  'position'=>3,
+					  'parent_id'=>0,
+					  'has_kids'=>0);
+				$this->db->insert("{$prefix}navigation",$data);
+			}
+			$query->free_result();
+		}
 
 
     }
@@ -49,7 +68,10 @@ class Migration_Install_players extends Migration {
             $this->db->query("DELETE FROM {$prefix}permissions WHERE (name = '".$name."')");
 
         }
-        $this->db->query("UPDATE {$prefix}sql_tables SET required = 0 WHERE name = 'players_awards' OR name = 'cities' OR name = 'nations'");
+        $this->db->query("UPDATE {$prefix}sql_tables SET required = 0 WHERE name = 'players_awards' OR name = 'cities' OR name = 'nations' OR name = 'states'");
+		
+		//delete the nav item
+		$this->db->query("DELETE FROM {$prefix}navigation WHERE (title = 'Players')");
 
     }
 	
